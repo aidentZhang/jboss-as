@@ -55,4 +55,8 @@ public class ForeignTransaction implements Transaction {
             SystemException {
         throw IIOPLogger.ROOT_LOGGER.foreignTransaction();
     }
+
+    public boolean isReadOnly() throws SystemException {
+        throw IIOPLogger.ROOT_LOGGER.foreignTransaction();
+    }
 }

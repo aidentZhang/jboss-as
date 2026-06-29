@@ -6,6 +6,7 @@ package org.jboss.as.txn.service.internal.tsr;
 
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import org.jboss.as.txn.logging.TransactionLogger;
@@ -95,6 +96,19 @@ public class TransactionSynchronizationRegistryWrapper implements TransactionSyn
     public void putResource(Object key, Object value)
         throws IllegalStateException {
         ContextTransactionSynchronizationRegistry.getInstance().putResource(key, value);
+    }
+
+    @Override
+    public boolean isReadOnly() throws IllegalStateException {
+        try {
+            Transaction tx = ContextTransactionManager.getInstance().getTransaction();
+            if (tx == null) {
+                throw new IllegalStateException("No active transaction");
+            }
+            return tx.isReadOnly();
+        } catch (SystemException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 }
